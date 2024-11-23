@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from ipaddress import IPv4Address
 @dataclass
 class Node:
-    NODE_PATH = '/nodes'
+    NODE_PATH = '/api/nodes'
 
     id: str
     hostname: str
@@ -18,7 +18,7 @@ class Node:
     
     @classmethod
     def from_dict(cls, data):
-        retrun cls(
+        return cls(
             id = data.get('id'),
             hostname = data.get('hostname'),
             ip_address = IPv4Address(data.get('ip_address')),
@@ -32,8 +32,7 @@ class Node:
             os_version = data.get('os_version'),
         )
 
-    @classmethod
-    def to_dict(cls):
+    def to_dict(self):
         return {
             'id': self.id,
             'hostname': self.hostname,

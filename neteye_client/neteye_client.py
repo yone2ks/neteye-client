@@ -1,5 +1,4 @@
 import requests
-from neteye_client.node import Node
 
 
 class NeteyeClient:
@@ -17,7 +16,3 @@ class NeteyeClient:
     
     def delete(self, path):
         return requests.delete(url=f"{self.url}{path}") 
-    
-    def get_node(self, id):
-        path = f"{Node.NODE_PATH}/{id}"
-        return Node.from_dict(self.get(path))
