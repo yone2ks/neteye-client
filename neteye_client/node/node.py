@@ -1,8 +1,11 @@
 from dataclasses import dataclass
 from ipaddress import IPv4Address
+
+from neteye_client.base import APIResource
+
+
 @dataclass
-class Node:
-    NODE_PATH = '/api/nodes'
+class Node():
 
     id: str
     hostname: str
@@ -46,3 +49,25 @@ class Node:
             'os_type': self.os_type,
             'os_version': self.os_version,
         }
+
+
+class node(APIResource):
+    PATH = '/api/nodes'
+    MODEL = Node
+
+    def command(self, id: str, command: str):
+        command_path = command.replace(' ', '+')
+        path = f"{self.PATH}/{id}/command/{command_path}"
+        response = self.client.get(path)
+        return response
+
+    def raw_command(self, id: str, command: str):
+        command_path = command.replace(' ', '+')
+        path = f"{self.PATH}/{id}/raw_command/{command_path}"
+        response = self.client.get(path)
+        return response
+
+    def import_node_from_id(self, id: str):
+        path = f"{self.PATH}/import_node_from_id/{id}"
+        response = self.client.get(path)
+        return response

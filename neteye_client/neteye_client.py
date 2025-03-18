@@ -1,18 +1,11 @@
 import requests
 
+from neteye_client.base import RestClient
+from neteye_client.node.node import node
+from neteye_client.interface.interface import interface
 
-class NeteyeClient:
+class NeteyeClient(RestClient):
     def __init__(self, url):
-        self.url = url
-
-    def get(self, path):
-        return requests.get(url=f"{self.url}{path}").json()
-
-    def post(self, path, data):
-        return requests.post(url=f"{self.url}{path}", data=data)
-    
-    def put(self, path, data):
-        return requests.put(url=f"{self.url}{path}", data=data) 
-    
-    def delete(self, path):
-        return requests.delete(url=f"{self.url}{path}") 
+        self.node = node(self)
+        self.interface = interface(self)
+        super().__init__(url)
