@@ -9,20 +9,22 @@ class APIResource():
         
     def get(self, id: Optional[str] = None):
         if id is None:
-            data = self.client.get(self.PATH)
-            return [self.MODEL.from_dict(item) for item in data]
+            response = self.client.get(self.PATH)
+            return [self.MODEL.from_dict(item) for item in response]
         else:
-            data = self.client.get(f"{self.PATH}/{id}")
-            return self.MODEL.from_dict(data)
+            response = self.client.get(f"{self.PATH}/{id}")
+            return self.MODEL.from_dict(response)
     
     def create(self, data):
-        data = self.client.post(self.PATH, data)
-        return self.MODEL.from_dict(data)
+        if data.get('id'):
+            del data['id']
+        response = self.client.post(self.PATH, data)
+        return self.MODEL.from_dict(response)
     
     def update(self, id, data):
-        data = self.client.put(f"{self.PATH}/{id}", data)
-        return self.MODEL.from_dict(data)
+        response = self.client.put(f"{self.PATH}/{id}", data)
+        return self.MODEL.from_dict(response)
     
     def delete(self, id):
-        data = self.client.delete(f"{self.PATH}/{id}")
-        return self.MODEL.from_dict(data)
+        response = self.client.delete(f"{self.PATH}/{id}")
+        return response
