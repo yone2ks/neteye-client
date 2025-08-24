@@ -71,3 +71,28 @@ class node(APIResource):
         path = f"{self.PATH}/import_node_from_id/{id}"
         response = self.client.get(path)
         return response
+
+    def import_node(self, id: str):
+        path = f"{self.PATH}/{id}/import/node"
+        response = self.client.post(path)
+        return response
+
+    def import_serial(self, id: str):
+        path = f"{self.PATH}/{id}/import/serial"
+        response = self.client.post(path)
+        return response
+
+    def import_interface(self, id: str):
+        path = f"{self.PATH}/{id}/import/interface"
+        response = self.client.post(path)
+        return response
+
+    def import_arp_entry(self, id: str):
+        path = f"{self.PATH}/{id}/import/arp_entry"
+        response = self.client.post(path)
+        return response
+
+    def import_all_data(self, id: str):
+        path = f"{self.PATH}/{id}/import/all_data"
+        response = self.client.post(path)
+        return response
