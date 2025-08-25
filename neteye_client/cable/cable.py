@@ -5,13 +5,12 @@ from neteye_client.base import APIResource
 
 @dataclass
 class Cable:
-    PATH = '/api/cables'
 
-    id: str
-    src_node_id: str
-    src_interface_id: str
-    dst_node_id: str
-    dst_interface_id: str
+    id: str = None
+    src_node_id: str = None
+    src_interface_id: str = None
+    dst_node_id: str = None
+    dst_interface_id: str = None
 
     @classmethod
     def from_dict(cls, data):

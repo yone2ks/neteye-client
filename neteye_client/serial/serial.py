@@ -5,18 +5,17 @@ from neteye_client.base import APIResource
 
 @dataclass
 class Serial:
-    PATH = '/api/serials'
 
-    id: str
-    node_id: str
-    serial: str
+    id: str = None
+    node_id: str = None
+    serial: str = ''
 
     @classmethod
     def from_dict(cls, data):
         return cls(
             id=data.get('id'),
             node_id=data.get('node_id'),
-            serial=data.get('serial'),
+            serial=data.get('serial', ''),
         )
 
     def to_dict(self):

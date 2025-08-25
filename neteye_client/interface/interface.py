@@ -5,31 +5,30 @@ from neteye_client.base import APIResource
 
 @dataclass
 class Interface():
-    PATH = '/api/interfaces'
 
-    id: str
-    name: str
-    description: str
-    ip_address: str
-    mask: str
-    speed: str
-    duplex: str
-    mtu: int
-    status: str
-    node_id: str
+    id: str = None
+    name: str = ''
+    description: str = ''
+    ip_address: str = ''
+    mask: str = ''
+    speed: str = ''
+    duplex: str = ''
+    mtu: int = 1500
+    status: str = ''
+    node_id: str = None
 
     @classmethod
     def from_dict(cls, data):
         return cls(
             id = data.get('id'),
-            name = data.get('name'),
-            description = data.get('description'),
-            ip_address = data.get('ip_address'),
-            mask = data.get('mask'),
-            speed = data.get('speed'),
-            duplex = data.get('duplex'),
-            mtu = data.get('mtu'),
-            status = data.get('status'),
+            name = data.get('name', ''),
+            description = data.get('description', ''),
+            ip_address = data.get('ip_address', ''),
+            mask = data.get('mask', ''),
+            speed = data.get('speed', ''),
+            duplex = data.get('duplex', ''),
+            mtu = data.get('mtu', 1500),
+            status = data.get('status', ''),
             node_id = data.get('node_id'),
         )
         
@@ -38,7 +37,7 @@ class Interface():
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'ip_address': str(self.ip_address),
+            'ip_address': self.ip_address,
             'mask': self.mask,
             'speed': self.speed,
             'duplex': self.duplex,

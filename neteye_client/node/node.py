@@ -9,6 +9,7 @@ class Node():
 
     id: str = None
     hostname: str = ''
+    description: str = ''
     ip_address: IPv4Address = IPv4Address('0.0.0.0')
     port: int = 22
     device_type: str = 'autodetect'
@@ -18,27 +19,35 @@ class Node():
     model: str = ''
     os_type: str = ''
     os_version: str = ''
+    username: str = ''
+    password: str = ''
+    enable: str = ''
     
     @classmethod
     def from_dict(cls, data):
         return cls(
             id = data.get('id'),
-            hostname = data.get('hostname'),
-            ip_address = IPv4Address(data.get('ip_address')),
-            port = data.get('port'),
-            device_type = data.get('device_type'),
-            scrapli_driver = data.get('scrapli_driver'),
-            napalm_driver = data.get('napam_driver'),
-            ntc_template_platform = data.get('ntc_template_platform'),
-            model = data.get('model'),
-            os_type = data.get('os_type'),
-            os_version = data.get('os_version'),
+            hostname = data.get('hostname', ''),
+            description = data.get('description', ''),
+            ip_address = IPv4Address(data.get('ip_address', '0.0.0.0')),
+            port = data.get('port', 22),
+            device_type = data.get('device_type', 'autodetect'),
+            scrapli_driver = data.get('scrapli_driver', 'not supported'),
+            napalm_driver = data.get('napalm_driver', 'not supported'),
+            ntc_template_platform = data.get('ntc_template_platform', ''),
+            model = data.get('model', ''),
+            os_type = data.get('os_type', ''),
+            os_version = data.get('os_version', ''),
+            username = data.get('username', ''),
+            password = data.get('password', ''),
+            enable = data.get('enable', '')
         )
 
     def to_dict(self):
         return {
             'id': self.id,
             'hostname': self.hostname,
+            'description': self.description,
             'ip_address': str(self.ip_address),
             'port': self.port,
             'device_type': self.device_type,
@@ -48,6 +57,9 @@ class Node():
             'model': self.model,
             'os_type': self.os_type,
             'os_version': self.os_version,
+            'username': self.username,
+            'password': self.password,
+            'enable': self.enable
         }
 
 
