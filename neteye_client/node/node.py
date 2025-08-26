@@ -123,3 +123,33 @@ class node(APIResource):
         path = f"{self.PATH}/{id}/import/all_data"
         response = self.client.post(path)
         return response
+    
+    def filter_by_hostname(self, hostname: str):
+        """Filter nodes by hostname."""
+        path = f"{self.PATH}/filter?field=hostname&filter_str={hostname}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+    
+    def filter_by_ip_address(self, ip_address: str):
+        """Filter nodes by IP address."""
+        path = f"{self.PATH}/filter?field=ip_address&filter_str={ip_address}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+    
+    def filter_by_device_type(self, device_type: str):
+        """Filter nodes by device type."""
+        path = f"{self.PATH}/filter?field=device_type&filter_str={device_type}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+    
+    def filter_by_model(self, model: str):
+        """Filter nodes by model."""
+        path = f"{self.PATH}/filter?field=model&filter_str={model}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+    
+    def filter_nodes(self, field: str, value: str):
+        """Generic filter method for nodes."""
+        path = f"{self.PATH}/filter?field={field}&filter_str={value}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
