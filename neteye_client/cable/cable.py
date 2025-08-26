@@ -23,13 +23,28 @@ class Cable:
         )
 
     def to_dict(self):
-        return {
-            'id': self.id,
+        # 必須フィールド（バリデーションと一致）
+        required_fields = {
             'src_node_id': self.src_node_id,
             'src_interface_id': self.src_interface_id,
             'dst_node_id': self.dst_node_id,
-            'dst_interface_id': self.dst_interface_id,
+            'dst_interface_id': self.dst_interface_id
         }
+        
+        # オプションフィールド
+        optional_fields = {
+            'id': self.id
+        }
+        
+        # 必須フィールドは常に含める
+        data = required_fields.copy()
+        
+        # オプションフィールドは値が存在する場合のみ追加
+        for key, value in optional_fields.items():
+            if value:
+                data[key] = value
+                
+        return data
 
 
 class cable(APIResource):

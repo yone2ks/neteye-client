@@ -33,18 +33,33 @@ class Interface():
         )
         
     def to_dict(self):
-        return {
-            'id': self.id,
+        # 必須フィールド（バリデーションと一致）
+        required_fields = {
             'name': self.name,
+            'node_id': self.node_id
+        }
+        
+        # オプションフィールド
+        optional_fields = {
+            'id': self.id,
             'description': self.description,
             'ip_address': self.ip_address,
             'mask': self.mask,
             'speed': self.speed,
             'duplex': self.duplex,
-            'mtu': self.mtu,
-            'status': self.status,
-            'node_id': self.node_id,
+            'mtu': self.mtu,  # デフォルト値も含める
+            'status': self.status
         }
+        
+        # 必須フィールドは常に含める
+        data = required_fields.copy()
+        
+        # オプションフィールドは値が存在する場合のみ追加
+        for key, value in optional_fields.items():
+            if value:
+                data[key] = value
+                
+        return data
 
 class interface(APIResource):
     PATH = '/api/interfaces'

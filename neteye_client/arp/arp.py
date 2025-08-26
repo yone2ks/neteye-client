@@ -21,12 +21,27 @@ class Arp:
         )
 
     def to_dict(self):
-        return {
-            'id': self.id,
+        # 必須フィールド（バリデーションと一致）
+        required_fields = {
             'node_id': self.node_id,
             'ip_address': self.ip_address,
-            'mac_address': self.mac_address,
+            'mac_address': self.mac_address
         }
+        
+        # オプションフィールド
+        optional_fields = {
+            'id': self.id
+        }
+        
+        # 必須フィールドは常に含める
+        data = required_fields.copy()
+        
+        # オプションフィールドは値が存在する場合のみ追加
+        for key, value in optional_fields.items():
+            if value:
+                data[key] = value
+                
+        return data
 
 
 class arp(APIResource):
