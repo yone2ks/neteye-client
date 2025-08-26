@@ -44,15 +44,20 @@ class Node():
         )
 
     def to_dict(self):
-        return {
-            'id': self.id,
+        # 必須フィールドの定義（バリデーションと一致させる）
+        required_fields = {
             'hostname': self.hostname,
-            'description': self.description,
             'ip_address': str(self.ip_address),
-            'port': self.port,
-            'device_type': self.device_type,
-            'scrapli_driver': self.scrapli_driver,
-            'napalm_driver': self.napalm_driver,
+            'port': self.port
+        }
+        
+        # オプションフィールドの定義（デフォルト値は含める）
+        optional_fields = {
+            'id': self.id,
+            'description': self.description,
+            'device_type': self.device_type,  # デフォルト値も含める
+            'scrapli_driver': self.scrapli_driver,  # デフォルト値も含める
+            'napalm_driver': self.napalm_driver,  # デフォルト値も含める
             'ntc_template_platform': self.ntc_template_platform,
             'model': self.model,
             'os_type': self.os_type,
@@ -61,6 +66,16 @@ class Node():
             'password': self.password,
             'enable': self.enable
         }
+        
+        # 必須フィールドは常に含める（バリデーションと一致）
+        data = required_fields.copy()
+        
+        # オプションフィールドは値が存在する場合のみ追加
+        for key, value in optional_fields.items():
+            if value:
+                data[key] = value
+        
+        return data
 
 
 class node(APIResource):

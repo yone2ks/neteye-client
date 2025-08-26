@@ -47,6 +47,8 @@ class APIResource():
             # Add more context to the error
             if e.status_code == 400:
                 raise APIError(f"Validation failed for {self.MODEL.__name__}: {e.message}", e.status_code)
+            else:
+                raise
         except ValueError as e:
             # Convert validation errors to APIError for consistency
             raise APIError(f"Client validation failed: {str(e)}", 400)
