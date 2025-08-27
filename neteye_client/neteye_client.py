@@ -10,13 +10,14 @@ from neteye_client.cable.cable import cable
 
 class NeteyeClient(RestClient):
     """A client for the Neteye API."""
-    def __init__(self, url: str):
+    def __init__(self, url: str, timeout: int = 10):
         """Initialize the Neteye client.
 
         Args:
-            url: The base URL for the Neteye API.
+            url: The base URL for the NetEye API.
+            timeout: The request timeout in seconds.
         """
-        super().__init__(url)
+        super().__init__(url=url, timeout=timeout)
         self._current_user: Optional[Dict[str, Any]] = None
 
         # API Resource clients
