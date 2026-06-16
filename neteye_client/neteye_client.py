@@ -50,4 +50,4 @@ class NeteyeClient(RestClient):
 
     def is_authenticated(self) -> bool:
         """Check if the client is currently authenticated."""
-        return self.get_current_user() is not None
+        return self._current_user is not None
