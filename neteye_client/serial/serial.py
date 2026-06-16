@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 from neteye_client.base import APIResource
 
@@ -6,38 +7,40 @@ from neteye_client.base import APIResource
 @dataclass
 class Serial:
 
-    id: str = None
-    node_id: str = None
-    serial: str = ''
+    id: Optional[str] = None
+    node_id: Optional[str] = None
+    serial_number: str = ''
+    product_id: str = ''
+    description: str = ''
 
     @classmethod
     def from_dict(cls, data):
         return cls(
             id=data.get('id'),
             node_id=data.get('node_id'),
-            serial=data.get('serial', ''),
+            serial_number=data.get('serial_number', ''),
+            product_id=data.get('product_id', ''),
+            description=data.get('description', ''),
         )
 
     def to_dict(self):
-        # 必須フィールド（バリデーションと一致）
         required_fields = {
             'node_id': self.node_id,
-            'serial': self.serial
+            'serial_number': self.serial_number,
         }
-        
-        # オプションフィールド
+
         optional_fields = {
-            'id': self.id
+            'id': self.id,
+            'product_id': self.product_id,
+            'description': self.description,
         }
-        
-        # 必須フィールドは常に含める
+
         data = required_fields.copy()
-        
-        # オプションフィールドは値が存在する場合のみ追加
+
         for key, value in optional_fields.items():
             if value:
                 data[key] = value
-                
+
         return data
 
 

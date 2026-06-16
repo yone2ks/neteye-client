@@ -215,26 +215,29 @@ def test_serial_arp_cable_clients(monkeypatch):
     # serials
     serials_url = base + "api/serials"
     DummySession.responses[("GET", serials_url)] = [
-        {"id": "s1", "node_id": "n-1", "serial": "FTX1234"}
+        {"id": "s1", "node_id": "n-1", "serial_number": "FTX1234"}
     ]
     serials = c.serial.get()
     assert isinstance(serials, list)
+    assert serials[0].to_dict()["serial_number"] == "FTX1234"
 
     # arps
-    arps_url = base + "api/arps"
+    arps_url = base + "api/arp_entries"
     DummySession.responses[("GET", arps_url)] = [
-        {"id": "a1", "node_id": "n-1", "ip_address": "192.0.2.10", "mac_address": "aa:bb:cc:dd:ee:ff"}
+        {"id": "a1", "interface_id": "i-1", "ip_address": "192.0.2.10", "mac_address": "aa:bb:cc:dd:ee:ff"}
     ]
     arps = c.arp.get()
     assert arps[0].to_dict()["mac_address"] == "aa:bb:cc:dd:ee:ff"
+    assert arps[0].interface_id == "i-1"
 
     # cables
     cables_url = base + "api/cables"
     DummySession.responses[("GET", cables_url)] = [
-        {"id": "c1", "src_node_id": "n-1", "src_interface_id": "i1", "dst_node_id": "n-2", "dst_interface_id": "i9"}
+        {"id": "c1", "a_interface_id": "i1", "b_interface_id": "i9", "cable_type": "copper"}
     ]
     cables = c.cable.get()
-    assert cables[0].to_dict()["dst_node_id"] == "n-2"
+    assert cables[0].to_dict()["b_interface_id"] == "i9"
+    assert cables[0].cable_type == "copper"
 
 
 def test_interface_get_and_filter(monkeypatch):
