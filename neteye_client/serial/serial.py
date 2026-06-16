@@ -44,6 +44,19 @@ class Serial:
         return data
 
 
+def _validate_serial_data(data: dict) -> None:
+    required_fields = ['node_id', 'serial_number']
+
+    for field in required_fields:
+        if not data.get(field):
+            raise ValueError(f"Required field '{field}' is missing or empty")
+
+    serial_number = data.get('serial_number', '').strip()
+    if not serial_number or len(serial_number) < 3:
+        raise ValueError("Serial number must be at least 3 characters long")
+
+
 class serial(APIResource):
     PATH = '/api/serials'
     MODEL = Serial
+    VALIDATOR = _validate_serial_data

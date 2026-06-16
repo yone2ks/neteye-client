@@ -1,4 +1,6 @@
+import re
 from dataclasses import dataclass
+from ipaddress import IPv4Address
 from typing import Optional
 
 from neteye_client.base import APIResource
@@ -50,6 +52,26 @@ class Arp:
         return data
 
 
+def _validate_arp_data(data: dict) -> None:
+    required_fields = ['interface_id', 'ip_address', 'mac_address']
+
+    for field in required_fields:
+        if not data.get(field):
+            raise ValueError(f"Required field '{field}' is missing or empty")
+
+    try:
+        IPv4Address(data['ip_address'])
+    except Exception:
+        raise ValueError(f"Invalid IP address format: {data['ip_address']}")
+
+    mac_address = data.get('mac_address', '').strip()
+    if mac_address:
+        mac_pattern = r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
+        if not re.match(mac_pattern, mac_address):
+            raise ValueError(f"Invalid MAC address format: {mac_address}")
+
+
 class arp(APIResource):
     PATH = '/api/arp_entries'
     MODEL = Arp
+    VALIDATOR = _validate_arp_data

@@ -47,6 +47,18 @@ class Cable:
         return data
 
 
+def _validate_cable_data(data: dict) -> None:
+    required_fields = ['a_interface_id', 'b_interface_id']
+
+    for field in required_fields:
+        if not data.get(field):
+            raise ValueError(f"Required field '{field}' is missing or empty")
+
+    if data.get('a_interface_id') == data.get('b_interface_id'):
+        raise ValueError("Cannot connect an interface to itself")
+
+
 class cable(APIResource):
     PATH = '/api/cables'
     MODEL = Cable
+    VALIDATOR = _validate_cable_data
