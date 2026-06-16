@@ -38,7 +38,7 @@ class Serial:
         data = required_fields.copy()
 
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
 
         return data
@@ -60,3 +60,13 @@ class serial(APIResource):
     PATH = '/api/serials'
     MODEL = Serial
     VALIDATOR = _validate_serial_data
+
+    def filter_by_serial_number(self, serial_number: str):
+        path = f"{self.PATH}/filter?field=serial_number&filter_str={serial_number}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_product_id(self, product_id: str):
+        path = f"{self.PATH}/filter?field=product_id&filter_str={product_id}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]

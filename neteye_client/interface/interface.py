@@ -37,7 +37,7 @@ class Interface():
     def to_dict(self):
         required_fields = {
             'name': self.name,
-            'node_id': self.node_id
+            'node_id': self.node_id,
         }
 
         optional_fields = {
@@ -48,13 +48,13 @@ class Interface():
             'speed': self.speed,
             'duplex': self.duplex,
             'mtu': self.mtu,
-            'status': self.status
+            'status': self.status,
         }
 
         data = required_fields.copy()
 
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
 
         return data
@@ -100,3 +100,18 @@ class interface(APIResource):
     def get_by_node(self, node_id: str):
         data = self.client.get(f"{self.PATH}/filter?field=node_id&filter_str={node_id}")
         return [self.MODEL.from_dict(item) for item in data]
+
+    def filter_by_ip_address(self, ip_address: str):
+        path = f"{self.PATH}/filter?field=ip_address&filter_str={ip_address}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_name(self, name: str):
+        path = f"{self.PATH}/filter?field=name&filter_str={name}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_status(self, status: str):
+        path = f"{self.PATH}/filter?field=status&filter_str={status}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]

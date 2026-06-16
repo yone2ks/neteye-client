@@ -69,7 +69,7 @@ class Node():
         data = required_fields.copy()
 
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
 
         return data

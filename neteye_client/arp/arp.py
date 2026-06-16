@@ -46,7 +46,7 @@ class Arp:
         data = required_fields.copy()
 
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
 
         return data
@@ -75,3 +75,18 @@ class arp(APIResource):
     PATH = '/api/arp_entries'
     MODEL = Arp
     VALIDATOR = _validate_arp_data
+
+    def filter_by_ip_address(self, ip_address: str):
+        path = f"{self.PATH}/filter?field=ip_address&filter_str={ip_address}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_mac_address(self, mac_address: str):
+        path = f"{self.PATH}/filter?field=mac_address&filter_str={mac_address}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_vendor(self, vendor: str):
+        path = f"{self.PATH}/filter?field=vendor&filter_str={vendor}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]

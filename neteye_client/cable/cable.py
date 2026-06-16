@@ -41,7 +41,7 @@ class Cable:
         data = required_fields.copy()
 
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
 
         return data
@@ -62,3 +62,13 @@ class cable(APIResource):
     PATH = '/api/cables'
     MODEL = Cable
     VALIDATOR = _validate_cable_data
+
+    def filter_by_cable_type(self, cable_type: str):
+        path = f"{self.PATH}/filter?field=cable_type&filter_str={cable_type}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
+
+    def filter_by_link_speed(self, link_speed: str):
+        path = f"{self.PATH}/filter?field=link_speed&filter_str={link_speed}"
+        response = self.client.get(path)
+        return [self.MODEL.from_dict(item) for item in response]
