@@ -85,7 +85,7 @@ class TestInterfaceModel:
         assert result["mtu"] == 1500
 
     def test_to_dict_mtu_zero_included(self):
-        """mtu=0 は None ではないので to_dict() に含まれるべき."""
+        """mtu=0 is not None, so it should be included in to_dict()."""
         iface = Interface(name="lo", node_id="n-1", mtu=0)
         result = iface.to_dict()
         assert "mtu" in result

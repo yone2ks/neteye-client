@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""neteye_client を使用して Node を操作するサンプルコード。
+"""Example code for managing Node resources with neteye_client.
 
-使用前に環境変数を設定してください:
+Set the following environment variables before running:
   export NETEYE_URL=http://localhost:5001
   export NETEYE_EMAIL=your_email@example.com
   export NETEYE_PASSWORD=your_password
@@ -25,7 +25,7 @@ def get_client() -> NeteyeClient:
 
 
 def add_node_example():
-    """Node を全フィールド指定で追加する例。"""
+    """Example of adding a Node with all fields specified."""
     client = get_client()
 
     new_node = Node(
@@ -47,15 +47,15 @@ def add_node_example():
 
     try:
         created_node = client.node.create(new_node)
-        print(f"Node追加成功: {created_node.hostname} (ID: {created_node.id})")
+        print(f"Node created successfully: {created_node.hostname} (ID: {created_node.id})")
         return created_node
     except Exception as e:
-        print(f"Node追加エラー: {e}")
+        print(f"Failed to create Node: {e}")
         return None
 
 
 def add_minimal_node():
-    """必須フィールドのみで Node を追加する例。"""
+    """Example of adding a Node with only required fields."""
     client = get_client()
 
     minimal_node = Node(
@@ -64,19 +64,19 @@ def add_minimal_node():
         port=22,
     )
 
-    print(f"送信データ: {minimal_node.to_dict()}")
+    print(f"Payload: {minimal_node.to_dict()}")
 
     try:
         created_node = client.node.create(minimal_node)
-        print(f"最小限 Node 追加成功: {created_node.hostname} (ID: {created_node.id})")
+        print(f"Minimal Node created successfully: {created_node.hostname} (ID: {created_node.id})")
         return created_node
     except Exception as e:
-        print(f"Node 追加エラー: {e}")
+        print(f"Failed to create Node: {e}")
         return None
 
 
 def add_node_with_dict():
-    """辞書形式で Node を追加する例。"""
+    """Example of adding a Node using a plain dict."""
     client = get_client()
 
     node_data = {
@@ -87,69 +87,69 @@ def add_node_with_dict():
 
     try:
         created_node = client.node.create(node_data)
-        print(f"辞書形式 Node 追加成功: {created_node.hostname} (ID: {created_node.id})")
+        print(f"Node created successfully from dict: {created_node.hostname} (ID: {created_node.id})")
         return created_node
     except Exception as e:
-        print(f"Node 追加エラー: {e}")
+        print(f"Failed to create Node: {e}")
         return None
 
 
 def get_all_nodes():
-    """全 Node を取得する例。"""
+    """Example of fetching all Nodes."""
     client = get_client()
 
     try:
         nodes = client.node.get()
-        print(f"取得した Node 数: {len(nodes)}")
+        print(f"Fetched {len(nodes)} Node(s)")
         for node in nodes:
             print(f"- {node.hostname} ({node.ip_address}) - ID: {node.id}")
         return nodes
     except Exception as e:
-        print(f"Node 取得エラー: {e}")
+        print(f"Failed to fetch Nodes: {e}")
         return []
 
 
 def filter_nodes_example():
-    """Node をフィルタリングする例。"""
+    """Example of filtering Nodes."""
     client = get_client()
 
-    print("=== Node フィルタリング例 ===")
+    print("=== Node filtering examples ===")
 
     try:
-        print("\n1. ホスト名でフィルタ (router):")
+        print("\n1. Filter by hostname (router):")
         for node in client.node.filter_by_hostname("router"):
             print(f"  - {node.hostname} ({node.ip_address})")
 
-        print("\n2. IP アドレスでフィルタ (192.168.1):")
+        print("\n2. Filter by IP address (192.168.1):")
         for node in client.node.filter_by_ip_address("192.168.1"):
             print(f"  - {node.hostname} ({node.ip_address})")
 
-        print("\n3. デバイスタイプでフィルタ (cisco_ios):")
+        print("\n3. Filter by device type (cisco_ios):")
         for node in client.node.filter_by_device_type("cisco_ios"):
             print(f"  - {node.hostname} ({node.device_type})")
 
-        print("\n4. OS タイプでフィルタ (IOS):")
+        print("\n4. Filter by OS type (IOS):")
         for node in client.node.filter_by_os_type("IOS"):
             print(f"  - {node.hostname} ({node.os_type})")
 
     except Exception as e:
-        print(f"フィルタエラー: {e}")
+        print(f"Filter error: {e}")
 
 
 if __name__ == "__main__":
-    print("=== Node 操作サンプル ===")
+    print("=== Node operation examples ===")
 
-    print("\n1. 単一 Node 追加（全フィールド）:")
+    print("\n1. Add a single Node (all fields):")
     add_node_example()
 
-    print("\n2. 最小限 Node 追加（必須フィールドのみ）:")
+    print("\n2. Add a minimal Node (required fields only):")
     add_minimal_node()
 
-    print("\n3. 辞書形式で Node 追加:")
+    print("\n3. Add a Node using a dict:")
     add_node_with_dict()
 
-    print("\n4. 全 Node 取得:")
+    print("\n4. Get all Nodes:")
     get_all_nodes()
 
-    print("\n5. Node フィルタリング:")
+    print("\n5. Filter Nodes:")
     filter_nodes_example()
