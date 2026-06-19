@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""ライブサーバーへの接続を手動で確認するスクリプト。
+"""Script to manually verify the connection to a live server.
 
-使用前に環境変数を設定してください:
+Set the following environment variables before running:
   export NETEYE_URL=http://localhost:5001
   export NETEYE_EMAIL=your_email@example.com
   export NETEYE_PASSWORD=your_password
