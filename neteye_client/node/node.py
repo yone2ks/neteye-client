@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from ipaddress import IPv4Address
+from typing import Optional
 
 from neteye_client.base import APIResource
 
@@ -22,7 +23,7 @@ class Node():
     username: str = ''
     password: str = ''
     enable: str = ''
-    
+
     @classmethod
     def from_dict(cls, data):
         return cls(
@@ -44,20 +45,18 @@ class Node():
         )
 
     def to_dict(self):
-        # 必須フィールドの定義（バリデーションと一致させる）
         required_fields = {
             'hostname': self.hostname,
             'ip_address': str(self.ip_address),
             'port': self.port
         }
-        
-        # オプションフィールドの定義（デフォルト値は含める）
+
         optional_fields = {
             'id': self.id,
             'description': self.description,
-            'device_type': self.device_type,  # デフォルト値も含める
-            'scrapli_driver': self.scrapli_driver,  # デフォルト値も含める
-            'napalm_driver': self.napalm_driver,  # デフォルト値も含める
+            'device_type': self.device_type,
+            'scrapli_driver': self.scrapli_driver,
+            'napalm_driver': self.napalm_driver,
             'ntc_template_platform': self.ntc_template_platform,
             'model': self.model,
             'os_type': self.os_type,
@@ -66,21 +65,39 @@ class Node():
             'password': self.password,
             'enable': self.enable
         }
-        
-        # 必須フィールドは常に含める（バリデーションと一致）
+
         data = required_fields.copy()
-        
-        # オプションフィールドは値が存在する場合のみ追加
+
         for key, value in optional_fields.items():
-            if value:
+            if value is not None and value != '':
                 data[key] = value
-        
+
         return data
+
+
+def _validate_node_data(data: dict) -> None:
+    for field in ['hostname', 'ip_address']:
+        if not data.get(field):
+            raise ValueError(f"Required field '{field}' is missing or empty")
+
+    if data.get('port') is None:
+        raise ValueError("Required field 'port' is missing or empty")
+
+    try:
+        if isinstance(data['ip_address'], str):
+            IPv4Address(data['ip_address'])
+    except Exception:
+        raise ValueError(f"Invalid IP address format: {data['ip_address']}")
+
+    port = data.get('port')
+    if not isinstance(port, int) or port < 1 or port > 65535:
+        raise ValueError(f"Port must be an integer between 1 and 65535, got: {port}")
 
 
 class node(APIResource):
     PATH = '/api/nodes'
     MODEL = Node
+    VALIDATOR = _validate_node_data
 
     def command(self, id: str, command: str):
         command_path = command.replace(' ', '+')
@@ -123,33 +140,28 @@ class node(APIResource):
         path = f"{self.PATH}/{id}/import/all_data"
         response = self.client.post(path)
         return response
-    
+
     def filter_by_hostname(self, hostname: str):
-        """Filter nodes by hostname."""
         path = f"{self.PATH}/filter?field=hostname&filter_str={hostname}"
         response = self.client.get(path)
         return [self.MODEL.from_dict(item) for item in response]
-    
+
     def filter_by_ip_address(self, ip_address: str):
-        """Filter nodes by IP address."""
         path = f"{self.PATH}/filter?field=ip_address&filter_str={ip_address}"
         response = self.client.get(path)
         return [self.MODEL.from_dict(item) for item in response]
-    
+
     def filter_by_device_type(self, device_type: str):
-        """Filter nodes by device type."""
         path = f"{self.PATH}/filter?field=device_type&filter_str={device_type}"
         response = self.client.get(path)
         return [self.MODEL.from_dict(item) for item in response]
-    
-    def filter_by_model(self, model: str):
-        """Filter nodes by model."""
-        path = f"{self.PATH}/filter?field=model&filter_str={model}"
+
+    def filter_by_os_type(self, os_type: str):
+        path = f"{self.PATH}/filter?field=os_type&filter_str={os_type}"
         response = self.client.get(path)
         return [self.MODEL.from_dict(item) for item in response]
-    
+
     def filter_nodes(self, field: str, value: str):
-        """Generic filter method for nodes."""
         path = f"{self.PATH}/filter?field={field}&filter_str={value}"
         response = self.client.get(path)
         return [self.MODEL.from_dict(item) for item in response]

@@ -16,14 +16,14 @@ class APIError(Exception):
 
 class RestClient:
     """A base REST client for making API requests."""
-    def __init__(self, base_url: str, timeout: int = 10):
+    def __init__(self, url: str, timeout: int = 10):
         """Initialize the REST client.
 
         Args:
-            base_url: The base URL for the API.
+            url: The base URL for the API.
             timeout: The request timeout in seconds.
         """
-        self.base_url = base_url.rstrip("/")
+        self.url = url.rstrip("/")
         self.timeout = timeout
         headers = {
             "Content-Type": "application/json",
@@ -60,13 +60,13 @@ class RestClient:
 
     def login_session(self, path: str = "/api/auth/login", data: Optional[Dict[str, Any]] = None, json: Optional[Dict[str, Any]] = None) -> Any:
         """Perform a session login."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.post(url, data=data, json=json, timeout=self.timeout)
         return self._handle_response(response)
 
     def logout_session(self, path: str = "/api/auth/logout") -> Any:
         """Perform a session logout."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.post(url, timeout=self.timeout)
         self.clear_auth()
         return self._handle_response(response)
@@ -74,24 +74,24 @@ class RestClient:
     # --- HTTP methods ---
     def get(self, path: str, params: Optional[Dict[str, Any]] = None) -> Any:
         """Perform a GET request."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.get(url, params=params, timeout=self.timeout)
         return self._handle_response(response)
 
     def post(self, path: str, data: Optional[Dict[str, Any]] = None) -> Any:
         """Perform a POST request."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.post(url, json=data, timeout=self.timeout)
         return self._handle_response(response)
 
     def put(self, path: str, data: Dict[str, Any]) -> Any:
         """Perform a PUT request."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.put(url, json=data, timeout=self.timeout)
         return self._handle_response(response)
 
     def delete(self, path: str) -> Any:
         """Perform a DELETE request."""
-        url = urljoin(self.base_url, path)
+        url = urljoin(self.url, path)
         response = self.session.delete(url, timeout=self.timeout)
         return self._handle_response(response)
